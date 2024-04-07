@@ -301,23 +301,16 @@ class BaseJqftuStation:
 
 
 	def construct_kana(self):
-		normalized = unicodedata.normalize('NFD', self.romaji)
-		stripped = ''.join(c for c in normalized if not unicodedata.combining(c))
-		replacements = {
-			'ā': 'a',
-			'ī': 'i',
-			'ū': 'u',
-			'ē': 'e',
-			'ō': 'o',
-			'Ā': 'A',
-			'Ī': 'I',
-			'Ū': 'U',
-			'Ē': 'E',
-			'Ō': 'O'
-		}
-		result = ''.join(replacements.get(c, c) for c in stripped)
+		replacements = [
+			('ō', 'ou'),
+			('Ō', 'OU')
+		]    
+		replaced = self.romaji
+		for target, replacement in replacements:
+			replaced = replaced.replace(target, replacement)
+		normalized = unicodedata.normalize('NFD', replaced)
+		result = ''.join(c for c in normalized if not unicodedata.combining(c))
 		self.hiragana, self.katakana = wanakana.to_hiragana(result), wanakana.to_katakana(result)
-
 
 	def parse(self):
 		try:
