@@ -301,13 +301,11 @@ class BaseJqftuStation:
 
 
 	def construct_kana(self):
-		replacements = [
-			('ō', 'ou'),
-			('Ō', 'OU')
-		]    
-		replaced = self.romaji
-		for target, replacement in replacements:
-			replaced = replaced.replace(target, replacement)
+		replacements = {
+			'ō': 'ou', 
+			'Ō': 'OU'
+		}
+		replaced = ''.join(replacements.get(c, c) for c in self.romaji)
 		normalized = unicodedata.normalize('NFD', replaced)
 		result = ''.join(c for c in normalized if not unicodedata.combining(c))
 		self.hiragana, self.katakana = wanakana.to_hiragana(result), wanakana.to_katakana(result)
